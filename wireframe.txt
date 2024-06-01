@@ -1,0 +1,19 @@
+
+   XX          XX          XX
+Avg. Mpg    Last MPG    Best MPG                
+
+Fuel Efficiency
+
+[ Graph here ]
+
+    XX               XX                   XX
+Avg. Fuel Cost   Last Fuel Cost     Total Fuel Cost
+
+Fuel Price
+
+[ Graph here ]
+
+    XX             XX             XX
+Avg. Mileage    Avg. £/l    Refuel Frequency
+
+Add entry button
