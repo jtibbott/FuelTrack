@@ -36,6 +36,9 @@ def dashboard():
         avg_pl = 0
         all_time_fuel_cost = 0
         refuel_frequency = 0
+        prev_mileage = None
+        mileage_diffs = []
+        mileage_diff = 0
 
         if rows:
             # Calculate averages
@@ -48,12 +51,20 @@ def dashboard():
 
             for row in rows:
                 litre = row['litre']
-                pl = row['p/l']
+                pl = row['p/l'] / 100
                 mileage = row['mileage']
+
+                # Calculate the difference in mileage if there is a previous mileage
+                if prev_mileage is not None:
+                    mileage_diff = mileage - prev_mileage
+                    mileage_diffs.append(mileage_diff)
                 
+                # Update prev_mileage for the next iteration
+                prev_mileage = mileage
+
                 cost = litre * pl
                 gallons = litre / 3.78541
-                mpg = mileage / gallons
+                mpg = mileage_diff / gallons
 
                 total_litre += litre
                 total_pl += pl
@@ -62,26 +73,31 @@ def dashboard():
                 total_mpg += mpg
 
             avg_litre = total_litre / num_rows
-            avg_pl = total_pl / num_rows
+            avg_pl = round(total_pl / num_rows, 3)
             avg_mileage = total_mileage / num_rows
-            avg_cost = total_cost / num_rows
+            avg_cost = round(total_cost / num_rows,2)
             avg_mpg = total_mpg / num_rows
 
             # Access the data from the most recent row
             most_recent_row = rows[0]
             last_litre = most_recent_row['litre']
-            last_pl = most_recent_row['p/l']
+            last_pl = most_recent_row['p/l'] / 100
             last_mileage = most_recent_row['mileage']
             last_date = most_recent_row['date']
 
             # Calculate all-time fuel cost
-            all_time_fuel_cost = sum(row['litre'] * row['p/l'] for row in rows)
-
+            all_time_fuel_cost = round(sum(row['litre'] * (row['p/l'] / 100) for row in rows), 2)
 
             # Calculate the cost and MPG for the most recent entry
-            last_cost = last_litre * last_pl
+            last_cost = round(last_litre * last_pl, 2)
             last_gallons = last_litre / 3.78541
             last_mpg = last_mileage / last_gallons
+
+            # Calculate the average mileage difference
+            if mileage_diffs:
+                avg_mileage = sum(mileage_diffs) / len(mileage_diffs)
+            else:
+                avg_mileage = 0            
 
         else:
             # Provide default values if there are no rows in the database
