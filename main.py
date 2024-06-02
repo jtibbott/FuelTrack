@@ -12,18 +12,17 @@ try:
     # Connect to DB and create a cursor
     sqliteConnection = sqlite3.connect('data.db')
     cursor = sqliteConnection.cursor()
-    print('DB Init')
 
-    # Wrte a query and execute it with cursor
-    query = 'select sqlite_version();'
-    cursor.execute(query)
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS data (
+        date TEXT,
+        litre REAL,
+        "p/l" REAL,
+        mileage INTEGER
+    )
+    ''')
 
-    # Fetch and output result
-    result = cursor.fetchall()
-    print('SQLLite Version is {}'.format(result))
-
-    # Close the cursor
-    cursor.close()
+    sqliteConnection.commit()
 
 # Handle errors
 except sqlite3.Error as error:
